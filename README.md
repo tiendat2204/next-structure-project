@@ -5,7 +5,7 @@
 This project is a structured Next.js application that includes ESLint configuration with NeoStandard and TypeScript support. It is designed to follow best practices for modern web development using Next.js 15.
 
 ## Features
-- Next.js 15 with TurboPack support
+- Next.js 16 with TurboPack support
 - React 19 (Release Candidate)
 - TypeScript support
 - ESLint configuration using NeoStandard
