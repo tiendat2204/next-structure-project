@@ -1,108 +1,115 @@
-
 # Next.js Structure Project
 
-## Project Overview
-This project is a structured Next.js application that includes ESLint configuration with NeoStandard and TypeScript support. It is designed to follow best practices for modern web development using Next.js 15.
+Template Next.js để clone về dùng mỗi khi cần. Bao gồm UI components, data-table, sidebar layout sẵn sàng sử dụng.
 
-## Features
-- Next.js 16 with TurboPack support
-- React 19 (Release Candidate)
-- TypeScript support
-- ESLint configuration using NeoStandard
-- Tailwind CSS for styling
-- ShadcnUI for UI components
+## Tech Stack
 
-## Installation
-To set up the project, follow these steps:
+| Package | Version |
+|---|---|
+| Next.js | 16.2.10 |
+| React | 19.2.7 |
+| TypeScript | 6.0.3 |
+| Tailwind CSS | 4.3.2 |
+| ESLint | 9.39.4 (neostandard + @stylistic) |
 
-### Prerequisites
-Ensure that you have the following installed:
-- Node.js (Latest LTS version recommended)
-- pnpm (Package manager)
+### Core Libraries
 
-### Install dependencies
+- **UI**: Radix UI, class-variance-authority, clsx, tailwind-merge, lucide-react
+- **Data Table**: @tanstack/react-table, nuqs, zod, nanoid
+- **State**: zustand, immer
+- **Animation**: motion
+- **Drag & Drop**: @dnd-kit
+- **Date**: date-fns, react-day-picker
+- **Command Palette**: cmdk
+
+## Cài đặt
+
 ```sh
 pnpm install
 ```
 
-## Available Scripts
+## Scripts
 
-### Development Server
 ```sh
-pnpm dev
-```
-Runs the development server with TurboPack.
-
-### Build the Project
-```sh
-pnpm build
-```
-Compiles the project for production.
-
-### Start the Production Server
-```sh
-pnpm start
-```
-Runs the compiled project in production mode.
-
-### Lint the Code
-```sh
-pnpm lint
-```
-Runs ESLint to check code quality.
-
-## Project Structure
-```
-next-structure-project/
-├── src/
-│   ├── app/             # Main
-│   ├── components/      # Reusable UI components
-│   ├── pages/           # Next.js pages
-│   ├── styles/          # Global styles
-│   ├── utils/           # Helper functions
-│   └── hooks/           # Custom React hooks
-├── public/              # Static assets
-├── .eslintrc.js         # ESLint configuration
-├── tailwind.config.js   # Tailwind CSS configuration
-├── package.json         # Project metadata and dependencies
-└── README.txt           # Project documentation
+pnpm dev          # Dev server với Turbopack
+pnpm build        # ESLint + production build
+pnpm start        # Chạy production server
+pnpm lint         # ESLint check
 ```
 
-## ESLint Configuration
-The project uses NeoStandard for linting with the following settings:
-## License
-This project is open-source and available under the MIT License.
+## Cấu trúc thư mục
 
----
-
-### Notes
-- If you face issues with `pnpm` not being recognized, install it globally:
-  ```sh
-  npm install -g pnpm
-  ```
-- Update ESLint rules as per your team's coding standards.
-
-Enjoy coding! 🚀
-
-=======
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
+│   └── api/hello/route.ts
+├── components/
+│   ├── ui/                 # Shadcn UI components (button, input, table, select...)
+│   ├── data-table/         # DataTable components (filter, sort, pagination, toolbar)
+│   └── sidebar/            # Sidebar layout (provider, toggle, admin-sidebar, main-sidebar)
+├── hooks/                  # Custom hooks (use-data-table, use-sidebar, use-mobile...)
+├── lib/                    # Utilities (cn, parsers, data-table helpers, format...)
+├── types/                  # TypeScript types (data-table)
+├── config/                 # App config (data-table operators, variants)
+└── constants/              # Constants (RECORD_PER_PAGE, dataTableConfig)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Hướng dẫn sử dụng
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### DataTable
 
+```tsx
+import { DataTable } from '@/components/data-table/data-table'
+import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import { useDataTable } from '@/hooks/use-data-table'
 
+// Define columns với meta cho filter/sort
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Tên',
+    meta: { label: 'Tên', variant: 'text' }
+  },
+  // ...
+]
+
+function MyPage() {
+  const { table } = useDataTable({
+    columns,
+    pageCount: 10,
+    initialState: { sorting: [{ id: 'name', desc: false }] }
+  })
+
+  return (
+    <DataTable table={table}>
+      <DataTableToolbar table={table} />
+    </DataTable>
+  )
+}
+```
+
+### Sidebar Layout
+
+```tsx
+import { SidebarProvider } from '@/components/sidebar/sidebar-provider'
+import { AdminSidebar } from '@/components/sidebar/admin-sidebar'
+import { SidebarInset } from '@/components/sidebar/sidebar-inset'
+
+export default function Layout({ children }) {
+  return (
+    <SidebarProvider>
+      <AdminSidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
+  )
+}
+```
+
+## Notes
+
+- ESLint config: `eslint.config.mjs` (flat config với neostandard + @stylistic)
+- PostCSS config: `postcss.config.mjs` (Tailwind CSS v4)
+- Proxy: Next.js 16 dùng `proxy.ts` thay vì `middleware.ts`

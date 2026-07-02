@@ -35,6 +35,10 @@ export default [
       // Generated files
       'src/components/ui/**', // Shadcn UI components
 
+      // Copied components (different code style)
+      'src/components/data-table/**',
+      'src/components/sidebar/**',
+
       // Environment files
       '.env*',
 
